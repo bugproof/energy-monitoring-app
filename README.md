@@ -1,3 +1,5 @@
+Budowanie i deployment działa tylko na WSL lub Linux
+
 ## Instalacja zależności
 
 ```bash
