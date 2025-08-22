@@ -37,6 +37,62 @@ function EnergyDataTooltip({ data, label }: EnergyDataTooltipProps) {
   );
 }
 
+interface EnergyChartProps {
+  title: string;
+  chartData: EnergyData[];
+  loading: boolean;
+}
+
+function EnergyChart({ title, chartData, loading }: EnergyChartProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex-1">
+        <div className="h-full">
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              Ładowanie...
+            </div>
+          ) : (
+            <ChartContainer config={chartConfig}>
+              <BarChart data={chartData}>
+                <XAxis
+                  dataKey="label"
+                  tickLine={false}
+                  axisLine={false}
+                  className="text-xs"
+                />
+                <YAxis
+                  label={{ value: 'kWh', angle: -90, position: 'insideLeft' }}
+                  tickLine={false}
+                  axisLine={false}
+                  className="text-xs"
+                />
+                <ChartTooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload as EnergyData
+                      return <EnergyDataTooltip data={data} label={label} />
+                    }
+                    return null
+                  }}
+                />
+                <Bar
+                  dataKey="consumption"
+                  fill="var(--color-consumption)"
+                  radius={4}
+                />
+              </BarChart>
+            </ChartContainer>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function EnergyMonitor() {
   const [activeTab, setActiveTab] = useState('day');
   const [data, setData] = useState<EnergyData[]>([]);
@@ -124,99 +180,19 @@ export default function EnergyMonitor() {
         </TabsList>
 
         <TabsContent value="day" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Godzinowe Zużycie Energii</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="h-full">
-                {loading ? (
-                  <div className="flex items-center justify-center h-full">
-                    Ładowanie...
-                  </div>
-                ) : (
-                  <ChartContainer config={chartConfig}>
-                    <BarChart data={chartData}>
-                      <XAxis
-                        dataKey="label"
-                        tickLine={false}
-                        axisLine={false}
-                        className="text-xs"
-                      />
-                      <YAxis
-                        label={{ value: 'kWh', angle: -90, position: 'insideLeft' }}
-                        tickLine={false}
-                        axisLine={false}
-                        className="text-xs"
-                      />
-                      <ChartTooltip
-                        content={({ active, payload, label }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload as EnergyData
-                            return <EnergyDataTooltip data={data} label={label} />
-                          }
-                          return null
-                        }}
-                      />
-                      <Bar
-                        dataKey="consumption"
-                        fill="var(--color-consumption)"
-                        radius={4}
-                      />
-                    </BarChart>
-                  </ChartContainer>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <EnergyChart
+            title="Godzinowe Zużycie Energii"
+            chartData={chartData}
+            loading={loading}
+          />
         </TabsContent>
 
         <TabsContent value="month" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Dzienne Zużycie Energii</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="h-full">
-                {loading ? (
-                  <div className="flex items-center justify-center h-full">
-                    Ładowanie...
-                  </div>
-                ) : (
-                  <ChartContainer config={chartConfig}>
-                    <BarChart data={chartData}>
-                      <XAxis
-                        dataKey="label"
-                        tickLine={false}
-                        axisLine={false}
-                        className="text-xs"
-                      />
-                      <YAxis
-                        label={{ value: 'kWh', angle: -90, position: 'insideLeft' }}
-                        tickLine={false}
-                        axisLine={false}
-                        className="text-xs"
-                      />
-                      <ChartTooltip
-                        content={({ active, payload, label }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload as EnergyData
-                            return <EnergyDataTooltip data={data} label={label} />
-                          }
-                          return null
-                        }}
-                      />
-                      <Bar
-                        dataKey="consumption"
-                        fill="var(--color-consumption)"
-                        radius={4}
-                      />
-                    </BarChart>
-                  </ChartContainer>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <EnergyChart
+            title="Dzienne Zużycie Energii"
+            chartData={chartData}
+            loading={loading}
+          />
         </TabsContent>
       </Tabs>
     </div>
