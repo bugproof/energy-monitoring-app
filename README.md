@@ -1,3 +1,5 @@
+Produkcja: https://energy-monitoring-app.nmdz.workers.dev/
+
 Budowanie i deployment działa tylko na WSL lub Linux
 
 ## Instalacja zależności
