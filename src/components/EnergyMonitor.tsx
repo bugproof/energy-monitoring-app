@@ -12,8 +12,6 @@ interface EnergyData {
   price: number;
 }
 
-interface EnergyDataPoint extends EnergyData { }
-
 const chartConfig = {
   consumption: {
     label: "Energy Consumption (kWh)",
@@ -22,7 +20,7 @@ const chartConfig = {
 };
 
 interface EnergyDataTooltipProps {
-  data: EnergyDataPoint;
+  data: EnergyData;
   label: string;
 }
 
@@ -154,7 +152,7 @@ export default function EnergyMonitor() {
                       <ChartTooltip
                         content={({ active, payload, label }) => {
                           if (active && payload && payload.length) {
-                            const data = payload[0].payload as EnergyDataPoint
+                            const data = payload[0].payload as EnergyData
                             return <EnergyDataTooltip data={data} label={label} />
                           }
                           return null
@@ -202,7 +200,7 @@ export default function EnergyMonitor() {
                       <ChartTooltip
                         content={({ active, payload, label }) => {
                           if (active && payload && payload.length) {
-                            const data = payload[0].payload as EnergyDataPoint
+                            const data = payload[0].payload as EnergyData
                             return <EnergyDataTooltip data={data} label={label} />
                           }
                           return null
